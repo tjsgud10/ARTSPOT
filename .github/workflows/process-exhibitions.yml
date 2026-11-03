@@ -1,0 +1,32 @@
+name: Process sample exhibitions
+
+# Manual execution only: Actions > Process sample exhibitions > Run workflow.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  process:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Download repository files
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Process fictional sample data
+        run: python scripts/process_exhibitions.py --as-of 2026-11-03 --max-price 10000
+      - name: Check expected demo results
+        run: |
+          python -c "import json; from pathlib import Path; s=json.loads(Path('results/summary.json').read_text(encoding='utf-8')); assert (s['total_count'], s['active_count'], s['recommended_count']) == (5, 3, 2); assert [r['id'] for r in s['recommendations']] == ['S001', 'S002']; print('Verified: 5 samples, 3 active, 2 recommended')"
+      - name: Save results for download
+        uses: actions/upload-artifact@v4
+        with:
+          name: artspot-sample-results
+          path: results/
+          if-no-files-found: error
+          retention-days: 7
