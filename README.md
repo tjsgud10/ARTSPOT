@@ -4,12 +4,25 @@ Seoul Art Exhibition Recommendation Platform
 
 서울 전시 추천 서비스를 만들기 위한 **10주차 학습용 프로젝트 시작본**입니다. CSV를 읽고 날짜와 관람료로 전시를 골라 결과를 저장하는 과정을 GitHub Actions로 실행합니다.
 
-> **모든 전시명, 전시장, 일정, 요금은 직접 만든 가상 예시입니다. 실제 전시 안내나 실시간 수집 결과가 아닙니다.** 현재 웹사이트나 AI 추천 모델은 구현하지 않았습니다.
+> **모든 전시명, 전시장, 일정, 요금은 직접 만든 가상 예시입니다. 실제 전시 안내나 실시간 수집 결과가 아닙니다.** 날짜·예산·지역·장르로 필터링하는 Streamlit 웹앱이며 AI 개인화 모델은 사용하지 않습니다.
+
+## Streamlit 웹앱
+
+**실행 주소: [ARTSPOT 웹앱 열기](https://artspot-tjsgud10.streamlit.app/)**
+
+`streamlit_app.py`가 웹앱 실행 파일입니다. 날짜·예산·지역·장르 선택, 관람료/종료일 정렬, 추천 CSV 다운로드를 제공합니다. 처음 접속하면 예시 날짜 2026-11-03과 예산 1만 원을 사용하여 추천 2건을 보여줍니다.
+
+```bash
+python -m pip install -r requirements.txt
+python -m streamlit run streamlit_app.py
+```
+
+Streamlit Community Cloud에서는 `tjsgud10/ARTSPOT` 저장소, `main` 브랜치, `streamlit_app.py` 파일을 선택해 배포합니다. 비밀 키 설정은 필요 없습니다.
 
 ## 목표와 범위
 
 - CSV 데이터 검증 → 기간/예산 필터 → 가격순 추천 → CSV/JSON 저장
-- 설치할 외부 Python 패키지, API 키, 유료 서비스 없이 실행
+- CSV 처리 코드는 외부 패키지 없이 실행하며, 웹앱은 Streamlit을 설치해 실행합니다. API 키는 필요 없습니다.
 - GitHub Actions의 이벤트, 작업(job), 단계(step), 실행 환경(runner) 이해
 - 완성된 기말 프로젝트가 아닌, 확장 가능한 작은 실습 결과물
 
@@ -21,6 +34,8 @@ Seoul Art Exhibition Recommendation Platform
 | `scripts/process_exhibitions.py` | 데이터 검사, 추천, 결과 저장 |
 | `.github/workflows/process-exhibitions.yml` | 버튼으로 실행하는 자동화 설정 |
 | `.gitignore` | 결과물과 비밀 설정 파일 제외 |
+| `streamlit_app.py` | 전시 필터·추천·다운로드 웹 화면 |
+| `requirements.txt` | Streamlit 설치 버전 |
 
 ## 내 컴퓨터에서 실행
 
@@ -51,16 +66,17 @@ Windows에서 `python`이 인식되지 않으면 `py`로 바꿔 실행할 수 �
 
 ## 수업 자료와 연결
 
-- **GitHub Actions for Beginners**: 8~10쪽의 YAML 경로와 `workflow_dispatch`, 12~14쪽의 결과 보존과 최소 권한, 15~16쪽의 수동 실행과 로그 확인을 적용했습니다.
+- **GitHub Actions for Beginners**: 8–10쪽의 YAML 경로와 `workflow_dispatch`, 12–14쪽의 결과 보존과 최소 권한, 15–16쪽의 수동 실행과 로그 확인을 적용했습니다.
 - **Lyric2Poster Design Specification (Open-Source Edition)**: 목표/범위 구분, 키 없이 동작하는 데모, 파일별 역할, 검증한 것과 미검증 항목을 구분하는 방식을 참고했습니다. 다른 프로젝트의 기능이나 코드는 복사하지 않았습니다.
 - 이 구성은 두 자료를 ARTSPOT에 응용한 실습입니다. 교수자의 별도 과제 안내나 채점 기준을 대체하지 않습니다.
 
 ## 검증 상태
 
 - 로컬 검증 완료(2026-11-03): 전체 5건, 기간 내 3건, 추천 2건과 추천 ID, 결과 CSV 저장, 중복 ID 거부를 확인했습니다.
+- Streamlit 배포 및 브라우저 확인 완료(2026-11-03): 기본 추천 2건, 사진 필터 1건, 미디어아트/1만 원 조건 0건과 빈 결과 안내를 확인했습니다.
 - GitHub Actions 실제 실행 완료(2026-11-03): [수동 실행 #1 — Success](https://github.com/tjsgud10/ARTSPOT/actions/runs/41579724614), 총 13초, 결과 artifact 1개 생성. Python 처리 및 예상 결과 검사 단계가 통과했습니다.
 - 실행에는 구버전 Action의 Node.js 20 사용 중단 경고가 표시됐으며 GitHub가 Node.js 24로 실행했습니다. 실행은 성공했습니다. 수업 예시 버전을 사용했으며, 다음 개선 때 [checkout](https://github.com/actions/checkout), [setup-python](https://github.com/actions/setup-python), [upload-artifact](https://github.com/actions/upload-artifact)의 최신 안내에 맞춰 갱신할 수 있습니다.
-- 실제 전시 API 수집, 웹 배포, 개인화/AI 추천: 구현 및 검증하지 않았습니다.
+- 실제 전시 API 수집, 개인화/AI 추천: 구현 및 검증하지 않았습니다.
 
 ## 앞으로 확장할 내용
 
